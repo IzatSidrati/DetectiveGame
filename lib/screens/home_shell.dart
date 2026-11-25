@@ -231,7 +231,7 @@ class _HomeShellState extends State<HomeShell> {
           padding: const EdgeInsets.all(18),
           decoration: BoxDecoration(
             gradient: const LinearGradient(
-              colors: [Color(0xFF1A2230), Color(0xFF131922)],
+              colors: [Color(0xFF101B20), Color(0xFF0A1114)],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),

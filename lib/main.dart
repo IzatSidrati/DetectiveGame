@@ -18,7 +18,7 @@ class MindCaseApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'MindCase',
+      title: 'Arsip Kelam',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.darkTheme(),
       builder: (context, child) {

@@ -1,5 +1,8 @@
 import 'package:brain_game/data/cases_data.dart';
-import 'package:brain_game/games/anomaly_logic_game.dart';
+import 'package:brain_game/games/dictaphone_tune_game.dart';
+import 'package:brain_game/games/hold_breath_game.dart';
+import 'package:brain_game/games/mirror_wipe_game.dart';
+import 'package:brain_game/games/ritual_offering_game.dart';
 import 'package:brain_game/l10n/app_strings.dart';
 import 'package:brain_game/main.dart';
 import 'package:brain_game/models/game_models.dart';
@@ -12,7 +15,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
   testWidgets(
-      'MindCase boots with comedy cases, toggles sound & ID/EN, and opens Case #01',
+      'Arsip Kelam boots in Dark Horror theme, toggles sound & ID/EN, and opens Case #01',
       (WidgetTester tester) async {
     SharedPreferences.setMockInitialValues({});
     final controller = AppStateController();
@@ -22,8 +25,9 @@ void main() {
     await tester.pumpAndSettle();
 
     // Default Indonesian UI + Sound ON
-    expect(find.text('MindCase'), findsOneWidget);
-    expect(find.text('Tragedi Jam 02.15 & Espresso Gaib'), findsOneWidget);
+    expect(find.text('Arsip Kelam'), findsOneWidget);
+    expect(find.text('Bangsal Melati Lantai 3 — RSUD Cempaka Lama'),
+        findsOneWidget);
     expect(find.byIcon(Icons.volume_up_rounded), findsOneWidget);
 
     // Toggle sound off
@@ -35,17 +39,18 @@ void main() {
     await tester.tap(find.text('ID'));
     await tester.pumpAndSettle();
     expect(find.text('EN'), findsOneWidget);
-    expect(find.text('The 02:15 Clock & Phantom Espresso'), findsOneWidget);
+    expect(find.text('Melati Ward Floor 3 — Old Cempaka Hospital'),
+        findsOneWidget);
 
-    // Open Case #01 Board (scroll into view inside the mobile-framed list)
-    await tester.drag(find.byType(ListView).first, const Offset(0, -180));
+    // Open Case #01 Board
+    await tester.drag(find.byType(ListView).first, const Offset(0, -200));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('The 02:15 Clock & Phantom Espresso'));
+    await tester.tap(find.text('Melati Ward Floor 3 — Old Cempaka Hospital'));
     await tester.pumpAndSettle();
-    expect(find.text('Keycard Panel Recall'), findsOneWidget);
+    expect(find.text('Wipe the Fogged Mirror'), findsOneWidget);
   });
 
-  testWidgets('Solving Case #01 reveals funny unexpected Plot Twist artwork',
+  testWidgets('Solving Case #01 reveals Room 304 Plot Twist',
       (WidgetTester tester) async {
     SharedPreferences.setMockInitialValues({});
     final controller = AppStateController();
@@ -62,37 +67,79 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    // Scroll to Nadia Kusuma (culprit) and accuse
-    await tester.scrollUntilVisible(find.text('Nadia Kusuma'), 200);
-    await tester.tap(find.text('Nadia Kusuma'));
+    await tester.drag(find.byType(ListView), const Offset(0, -450));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('dr. Hendro Wirawan'));
     await tester.pumpAndSettle();
 
-    await tester.scrollUntilVisible(find.text('Tuduh Tersangka Ini!'), 200);
-    await tester.tap(find.text('Tuduh Tersangka Ini!'));
+    await tester.drag(find.byType(ListView), const Offset(0, -350));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Tunjuk Sumber Tragedi'));
     await tester.pumpAndSettle();
 
-    // Verify Plot Twist illustration & comedic reveal text!
     expect(find.text('PLOT TWIST!'), findsOneWidget);
-    expect(find.text('PLOT TWIST: "Bos Mochi" Ikut Terbawa!'), findsOneWidget);
+    expect(
+      find.text('PLOT TWIST: Harta Gelap di Balik Tembok Ruang 304!'),
+      findsOneWidget,
+    );
   });
 
-  testWidgets('New Odd Clue Hunt visual logic mini-game displays story banner',
+  testWidgets('All 4 horror mini-games render cleanly',
       (WidgetTester tester) async {
+    const s = AppStrings(AppLanguage.id);
+
+    // 1. Usap Cermin
     await tester.pumpWidget(
       MaterialApp(
         theme: AppTheme.darkTheme(),
-        home: const AnomalyLogicGameScreen(
-          strings: AppStrings(AppLanguage.id),
+        home: const MirrorWipeGameScreen(
+          strings: s,
           difficulty: 1,
-          caseId: 'case_01',
-          storyCaption: 'Cari simbol log yang janggal!',
+          stageId: 'c1_s1',
         ),
       ),
     );
     await tester.pump();
+    expect(find.text('304'), findsOneWidget);
+    expect(find.text('01:45'), findsOneWidget);
 
-    expect(find.text('TKP • LIVE'), findsOneWidget);
-    expect(find.text('Cari simbol log yang janggal!'), findsOneWidget);
-    expect(find.text('Ketuk 1 bukti yang JANGGAL di grid!'), findsOneWidget);
+    // 2. Selaraskan Pita Diktafon
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: AppTheme.darkTheme(),
+        home: const DictaphoneTuneGameScreen(
+          strings: s,
+          difficulty: 1,
+          stageId: 'c1_s2',
+        ),
+      ),
+    );
+    await tester.pump();
+    expect(find.byType(Slider), findsOneWidget);
+
+    // 3. Susun Arah Sesajen
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: AppTheme.darkTheme(),
+        home: const RitualOfferingGameScreen(strings: s, difficulty: 1),
+      ),
+    );
+    await tester.pump();
+    expect(find.text('UTARA'), findsOneWidget);
+    expect(find.text('TENGAH'), findsOneWidget);
+    expect(find.text('SELATAN'), findsOneWidget);
+    expect(find.text('Kendi Tanah Liat'), findsOneWidget);
+    expect(find.text('Bunga Melati'), findsOneWidget);
+    expect(find.text('Kemenyan'), findsOneWidget);
+
+    // 4. Tahan Napas
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: AppTheme.darkTheme(),
+        home: const HoldBreathGameScreen(strings: s, difficulty: 1),
+      ),
+    );
+    await tester.pump();
+    expect(find.text('TAHAN NAPAS'), findsOneWidget);
   });
 }

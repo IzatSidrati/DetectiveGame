@@ -38,6 +38,7 @@ class _StageBriefingScreenState extends State<StageBriefingScreen> {
       difficulty: widget.stage.difficulty,
       headerTitle: widget.stage.title.of(s.lang),
       caseId: widget.detectiveCase.imageAsset,
+      stageId: widget.stage.id,
       storyCaption: widget.stage.briefing.of(s.lang),
     );
     if (res == null || !mounted) return;

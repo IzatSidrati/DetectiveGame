@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import '../l10n/app_strings.dart';
 import '../models/game_models.dart';
-import 'anomaly_logic_game.dart';
-import 'memory_grid_game.dart';
-import 'quick_math_game.dart';
-import 'stroop_focus_game.dart';
+import 'dictaphone_tune_game.dart';
+import 'hold_breath_game.dart';
+import 'mirror_wipe_game.dart';
+import 'ritual_offering_game.dart';
 
 Future<MiniGameResult?> launchMiniGame({
   required BuildContext context,
@@ -13,44 +13,39 @@ Future<MiniGameResult?> launchMiniGame({
   required int difficulty,
   String? headerTitle,
   String? caseId,
+  String? stageId,
   String? storyCaption,
 }) {
   Widget page;
   switch (skill) {
     case BrainSkill.memory:
-      page = MemoryGridGameScreen(
+      page = MirrorWipeGameScreen(
         strings: strings,
         difficulty: difficulty,
         headerTitle: headerTitle,
-        caseId: caseId,
-        storyCaption: storyCaption,
+        stageId: stageId,
       );
       break;
     case BrainSkill.focus:
-      page = StroopFocusGameScreen(
+      page = DictaphoneTuneGameScreen(
         strings: strings,
         difficulty: difficulty,
         headerTitle: headerTitle,
-        caseId: caseId,
-        storyCaption: storyCaption,
+        stageId: stageId,
       );
       break;
     case BrainSkill.logic:
-      page = AnomalyLogicGameScreen(
+      page = RitualOfferingGameScreen(
         strings: strings,
         difficulty: difficulty,
         headerTitle: headerTitle,
-        caseId: caseId,
-        storyCaption: storyCaption,
       );
       break;
     case BrainSkill.math:
-      page = QuickMathGameScreen(
+      page = HoldBreathGameScreen(
         strings: strings,
         difficulty: difficulty,
         headerTitle: headerTitle,
-        caseId: caseId,
-        storyCaption: storyCaption,
       );
       break;
   }
